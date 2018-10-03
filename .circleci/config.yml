@@ -39,13 +39,13 @@ workflows:
   version: 2
   dev_stage_prod:
     jobs:
-      - deploy-test:
+      - deploy_test:
         requires:
           - build
         filters:
           branches:
             only: develop
-      - deploy-prod:
+      - deploy_prod:
         requires:
           - build
         filters:
