@@ -39,6 +39,7 @@ workflows:
   version: 2
   dev_stage_prod:
     jobs:
+      - build
       - deploy_test:
           requires:
             - build
