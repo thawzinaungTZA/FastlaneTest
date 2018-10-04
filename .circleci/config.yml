@@ -6,30 +6,7 @@ general:
       - develop
 
 jobs:
-  deploy_test:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-25-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
-    steps:
-      - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-#      - run:
-#         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-#         command: sudo chmod +x ./gradlew
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-          - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Run AssembleDebug
-          command: ./gradlew assembleDebug
-  deploy_prod:
+  build:
       working_directory: ~/code
       docker:
         - image: circleci/android:api-25-alpha
@@ -49,6 +26,11 @@ jobs:
             paths:
             - ~/.gradle
             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+  deploy_test:
+      - run:
+          name: Run AssembleDebug
+          command: ./gradlew assembleDebug
+  deploy_prod:
         - run:
             name: Run AssembleDebug
             command: ./gradlew assembleRelease
@@ -68,11 +50,16 @@ workflows:
   version: 2
   dev_stage_prod:
     jobs:
+      - build
       - deploy_test:
+        requires:
+          - build
         filters:
           branches:
             only: develop
       - deploy_prod:
+        requires:
+          - build
         filters:
           branches:
             only: master
