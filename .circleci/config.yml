@@ -1,10 +1,4 @@
 version: 2
-general:
-  branches:
-    only:
-      - master
-      - develop
-
 jobs:
   build:
       working_directory: ~/code
@@ -31,9 +25,9 @@ jobs:
           name: Run AssembleDebug
           command: ./gradlew assembleDebug
   deploy_prod:
-        - run:
-            name: Run AssembleDebug
-            command: ./gradlew assembleRelease
+      - run:
+          name: Run AssembleDebug
+          command: ./gradlew assembleRelease
 #      - save_cache:
 #          paths:
 #            - ~/.gradle
@@ -49,18 +43,18 @@ jobs:
 workflows:
   version: 2
   dev_stage_prod:
-    jobs:
-      - build
-      - deploy_test:
-        requires:
+      jobs:
           - build
-        filters:
-          branches:
-            only: develop
-      - deploy_prod:
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
+          - deploy_test:
+              requires:
+                  - build
+              filters:
+                  branches:
+                      only: develop
+          - deploy_prod:
+              requires:
+                  - build
+              filters:
+                  branches:
+                      only: master
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
