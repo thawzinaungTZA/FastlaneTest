@@ -20,9 +20,9 @@ jobs:
             paths:
             - ~/.gradle
             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-  deploy-test:
+  deploy_test:
       command: ./gradlew assembleDebug
-  deploy-prod:
+  deploy_prod:
       command: ./gradlew assembleRelease
 #      - save_cache:
 #          paths:
@@ -41,13 +41,13 @@ workflows:
   dev_stage_prod:
       jobs:
           - build
-          - deploy-test:
+          - deploy_test
               requires:
                   - build
               filters:
                   branches:
                       only: develop
-          - deploy-prod:
+          - deploy_prod
               requires:
                   - build
               filters:
