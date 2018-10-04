@@ -20,6 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "default"
+    productFlavors {
+        staging {
+            applicationId 'hivelocity.co.jp.fastlanetest.staging'
+        }
+        production {
+            applicationId 'hivelocity.co.jp.fastlanetest'
+        }
+    }
 }
 
 dependencies {

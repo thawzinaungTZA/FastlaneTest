@@ -44,7 +44,7 @@ jobs:
               name: Run assembleDebug
               command: |
                   ./gradlew assembleDebug
-                  curl -F "file=@app/build/outputs/apk/debug/app-debug.apk" -F "token=${DEPLOYGATE_API_KEY}" -F "message=App for ${CIRCLE_BRANCH} (# ${CIRCLE_SHA1})" https://deploygate.com/api/users/${DEPLOYGATE_USERNAME}/apps
+                  curl -F "file=@app/build/outputs/apk/staging/debug/app-staging-debug.apk" -F "token=${DEPLOYGATE_API_KEY}" -F "message=App for ${CIRCLE_BRANCH} (# ${CIRCLE_SHA1})" https://deploygate.com/api/users/${DEPLOYGATE_USERNAME}/apps
   deploy_prod:
           working_directory: ~/code
           docker:
@@ -69,7 +69,7 @@ jobs:
                 name: Run assembleRelease
                 command: |
                     ./gradlew assembleRelease
-                    curl -F "file=@app/build/outputs/apk/release/app-release-unsigned.apk" -F "token=${DEPLOYGATE_API_KEY}" -F "message=App for ${CIRCLE_BRANCH} (# ${CIRCLE_SHA1})" https://deploygate.com/api/users/${DEPLOYGATE_USERNAME}/apps
+                    curl -F "file=@app/build/outputs/apk/production/release/app-production-release-unsigned.apk" -F "token=${DEPLOYGATE_API_KEY}" -F "message=App for ${CIRCLE_BRANCH} (# ${CIRCLE_SHA1})" https://deploygate.com/api/users/${DEPLOYGATE_USERNAME}/apps
 #      - save_cache:
 #          paths:
 #            - ~/.gradle
