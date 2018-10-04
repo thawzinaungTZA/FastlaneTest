@@ -39,16 +39,16 @@ platform :android do
   end
 
   desc "Deploy a new version to deploygate"
-    lane :beta do
-      gradle(task: "clean assembleDebug")
-      branch_name = git_branch
-      deploygate(
-        api_token: ENV["DEPLOYGATE_API_KEY"],
-        user: ENV["DEPLOYGATE_USERNAME"],
-        apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-        message: "app updated, from branch \"#{branch_name}\"",
-      )
-    end
+  lane :beta do
+    gradle(task: "clean assembleDebug")
+    branch_name = git_branch
+    deploygate(
+      api_token: ENV["DEPLOYGATE_API_KEY"],
+      user: ENV["DEPLOYGATE_USERNAME"],
+      apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      message: "app updated, from branch \"#{branch_name}\"",
+    )
+  end
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
