@@ -21,7 +21,6 @@ jobs:
             - ~/.gradle
             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
   deploy_test:
-        branch: develop
         working_directory: ~/code
         docker:
           - image: circleci/android:api-25-alpha
@@ -45,7 +44,6 @@ jobs:
               name: Run assembleDebug
               command: ./gradlew assembleDebug
   deploy_prod:
-          branch: master
           working_directory: ~/code
           docker:
             - image: circleci/android:api-25-alpha
@@ -84,6 +82,12 @@ workflows:
   version: 2
   dev_stage_prod:
       jobs:
-          - deploy_test
-          - deploy_prod
+          - deploy_test:
+              filters:
+                  branches:
+                      only: develop
+          - deploy_prod:
+              filters:
+                  branches:
+                      only: master
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
