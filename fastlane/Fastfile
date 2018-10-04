@@ -19,7 +19,7 @@ platform :android do
 
   before_all do
       @gradle_file = "../app/build.gradle"
-    end
+  end
 
   desc "Runs all the tests"
   lane :test do
@@ -27,19 +27,16 @@ platform :android do
   end
 
   desc "Deploy a new version to deploygate"
-    lane :alpha do
-      gradle(task: "clean assembleDebug")
-      branch_name = git_branch
-          deploygate(
-            api_token: ENV["DEPLOYGATE_API_TOKEN"],
-            user: ENV["DEPLOYGATE_USER"],
-            apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-            message: "app updated, from branch \"#{branch_name}\"",
-          )
-
-      # sh "your_script.sh"
-      # You can also use other beta testing services here
-    end
+  lane :alpha do
+    gradle(task: "clean assembleDebug")
+    branch_name = git_branch
+    deploygate(
+      api_token: ENV["DEPLOYGATE_API_KEY"],
+      user: ENV["DEPLOYGATE_USERNAME"],
+      apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      message: "app updated, from branch \"#{branch_name}\"",
+    )
+  end
 
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
