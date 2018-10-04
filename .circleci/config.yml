@@ -21,13 +21,9 @@ jobs:
             - ~/.gradle
             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
   deploy-test:
-      - run:
-          name: Run AssembleDebug
-          command: ./gradlew assembleDebug
+      command: ./gradlew assembleDebug
   deploy-prod:
-      - run:
-          name: Run AssembleDebug
-          command: ./gradlew assembleRelease
+      command: ./gradlew assembleRelease
 #      - save_cache:
 #          paths:
 #            - ~/.gradle
