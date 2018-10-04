@@ -26,50 +26,42 @@ jobs:
           - image: circleci/android:api-25-alpha
         environment:
           JVM_OPTS: -Xmx3200m
+          FASTLANE_LANE: alpha
         steps:
           - checkout
           - restore_cache:
-              key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-    #      - run:
-    #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-    #         command: sudo chmod +x ./gradlew
-          - run:
-              name: Download Dependencies
-              command: ./gradlew androidDependencies
+              key: 1-gems-{{ checksum "Gemfile.lock" }}
+          - run: bundle check || bundle install --path vendor/bundle
           - save_cache:
+              key: 1-gems-{{ checksum "Gemfile.lock" }}
               paths:
-              - ~/.gradle
-              key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+                - vendor/bundle
           - run:
-              name: Run assembleDebug
-              command: |
-                  ./gradlew assembleDebug
-                  curl -F "file=@app/build/outputs/apk/staging/debug/app-staging-debug.apk" -F "token=${DEPLOYGATE_API_KEY}" -F "message=App for ${CIRCLE_BRANCH} (# ${CIRCLE_SHA1})" https://deploygate.com/api/users/${DEPLOYGATE_USERNAME}/apps
+              name: fastlane
+              command: bundle exec fastlane $FASTLANE_LANE
+          - store_artifacts:
+              path: output
   deploy_prod:
           working_directory: ~/code
           docker:
             - image: circleci/android:api-25-alpha
           environment:
             JVM_OPTS: -Xmx3200m
+            FASTLANE_LANE: alpha
           steps:
             - checkout
-            - restore_cache:
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      #      - run:
-      #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
-      #         command: sudo chmod +x ./gradlew
-            - run:
-                name: Download Dependencies
-                command: ./gradlew androidDependencies
-            - save_cache:
-                paths:
-                - ~/.gradle
-                key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-            - run:
-                name: Run assembleDebug
-                command: |
-                    ./gradlew assembleDebug
-                    curl -F "file=@app/build/outputs/apk/production/debug/app-production-debug.apk" -F "token=${DEPLOYGATE_API_KEY}" -F "message=App for ${CIRCLE_BRANCH} (# ${CIRCLE_SHA1})" https://deploygate.com/api/users/${DEPLOYGATE_USERNAME}/apps
+          - restore_cache:
+              key: 1-gems-{{ checksum "Gemfile.lock" }}
+          - run: bundle check || bundle install --path vendor/bundle
+          - save_cache:
+              key: 1-gems-{{ checksum "Gemfile.lock" }}
+              paths:
+                - vendor/bundle
+          - run:
+              name: fastlane
+              command: bundle exec fastlane $FASTLANE_LANE
+          - store_artifacts:
+              path: output
 #      - save_cache:
 #          paths:
 #            - ~/.gradle
