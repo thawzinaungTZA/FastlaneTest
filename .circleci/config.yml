@@ -21,9 +21,53 @@ jobs:
             - ~/.gradle
             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
   deploy_test:
-      command: ./gradlew assembleDebug
+        branch: develop
+        working_directory: ~/code
+        docker:
+          - image: circleci/android:api-25-alpha
+        environment:
+          JVM_OPTS: -Xmx3200m
+        steps:
+          - checkout
+          - restore_cache:
+              key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+    #      - run:
+    #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+    #         command: sudo chmod +x ./gradlew
+          - run:
+              name: Download Dependencies
+              command: ./gradlew androidDependencies
+          - save_cache:
+              paths:
+              - ~/.gradle
+              key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          - run:
+              name: Run assembleDebug
+              command: ./gradlew assembleDebug
   deploy_prod:
-      command: ./gradlew assembleRelease
+          branch: master
+          working_directory: ~/code
+          docker:
+            - image: circleci/android:api-25-alpha
+          environment:
+            JVM_OPTS: -Xmx3200m
+          steps:
+            - checkout
+            - restore_cache:
+                key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      #      - run:
+      #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
+      #         command: sudo chmod +x ./gradlew
+            - run:
+                name: Download Dependencies
+                command: ./gradlew androidDependencies
+            - save_cache:
+                paths:
+                - ~/.gradle
+                key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+            - run:
+                name: Run assembleRelease
+                command: ./gradlew assembleRelease
 #      - save_cache:
 #          paths:
 #            - ~/.gradle
@@ -40,17 +84,6 @@ workflows:
   version: 2
   dev_stage_prod:
       jobs:
-          - build
           - deploy_test
-              requires:
-                  - build
-              filters:
-                  branches:
-                      only: develop
           - deploy_prod
-              requires:
-                  - build
-              filters:
-                  branches:
-                      only: master
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples
