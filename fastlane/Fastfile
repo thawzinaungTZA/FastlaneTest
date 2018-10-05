@@ -41,8 +41,7 @@ platform :android do
   desc "Deploy a new version to deploygate"
   lane :beta do
     gradle(
-        task: "assemble",
-        build_type: "Release",
+        task: "clean assembleProductionRelease",
         properties: {
            "android.injected.signing.store.file" => ENV["KEY_STORE_PATH"],
            "android.injected.signing.store.password" => ENV["KEY_STORE_PASSWORD"],
