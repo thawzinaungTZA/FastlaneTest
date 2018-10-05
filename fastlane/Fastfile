@@ -45,7 +45,7 @@ platform :android do
         flavor: "production",
         build_type: "Release",
         properties: {
-           "android.injected.signing.store.file" => "keystore_test.jks",
+           "android.injected.signing.store.file" => "../app/keystore_test.jks",
            "android.injected.signing.store.password" => ENV["KEY_STORE_PASSWORD"],
            "android.injected.signing.key.alias" => ENV["KEY_STORE_KEY_ALIAS"],
            "android.injected.signing.key.password" => ENV["KEY_STORE_KEY_PASSWORD"],
