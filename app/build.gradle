@@ -17,9 +17,9 @@ android {
     signingConfigs {
         release {
             storeFile file("keystore_test.jks")
-            storePassword System.getenv("KSTOREPWD")
+            storePassword "12345678"
             keyAlias "fastlane_test"
-            keyPassword System.getenv("KEYPWD")
+            keyPassword "12345678"
         }
     }
     buildTypes {
