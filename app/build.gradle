@@ -16,7 +16,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("keystore_test.jks")
+            storeFile file("./keystore_test.jks")
             storePassword "12345678"
             keyAlias "fastlane_test"
             keyPassword "12345678"
