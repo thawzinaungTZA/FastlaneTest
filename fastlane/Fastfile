@@ -42,7 +42,6 @@ platform :android do
   lane :beta do
     gradle(
         task: "assemble",
-        flavor: "production",
         build_type: "Release",
         properties: {
            "android.injected.signing.store.file" => ENV["KEY_STORE_PATH"],
