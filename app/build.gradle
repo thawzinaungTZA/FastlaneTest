@@ -14,8 +14,18 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("app/keystore_glay.jks")
+            storePassword System.getenv("KSTOREPWD")
+            keyAlias "fastlane_test"
+            keyPassword System.getenv("KEYPWD")
+        }
+    }
     buildTypes {
         release {
+            debuggable false
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
