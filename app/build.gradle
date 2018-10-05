@@ -16,7 +16,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("keystore_glay.jks")
+            storeFile file("keystore.jks")
             storePassword System.getenv("KSTOREPWD")
             keyAlias "fastlane_test"
             keyPassword System.getenv("KEYPWD")
