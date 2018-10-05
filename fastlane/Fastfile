@@ -34,19 +34,29 @@ platform :android do
       api_token: ENV["DEPLOYGATE_API_KEY"],
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      message: "app updated, from branch \"#{branch_name}\"",
+      message: "App updated, from branch \"#{branch_name}\"",
     )
   end
 
   desc "Deploy a new version to deploygate"
   lane :beta do
-    gradle(task: "assemble", flavor: "production", build_type: "Debug")
+    gradle(
+        task: "assemble",
+        flavor: "production",
+        build_type: "Release",
+        properties: {
+                "android.injected.signing.store.file" => ENV["KEY_STORE_PATH"],
+                "android.injected.signing.store.password" => ENV["KEY_STORE_PASSWORD"],
+                "android.injected.signing.key.alias" => ENV["KEY_STORE_KEY_ALIAS"],
+                "android.injected.signing.key.password" => ENV["KEY_STORE_KEY_PASSWORD"],
+              }
+    )
     branch_name = git_branch
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      message: "app updated, from branch \"#{branch_name}\"",
+      message: "App updated, from branch \"#{branch_name}\"",
     )
   end
 
