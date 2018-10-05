@@ -28,7 +28,7 @@ platform :android do
 
   desc "Deploy a new version to deploygate"
   lane :alpha do
-    gradle(task: "clean assembleDebug")
+    gradle(task: "assemble", flavor: "staging", build_type: "Debug")
     branch_name = git_branch
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
@@ -40,7 +40,7 @@ platform :android do
 
   desc "Deploy a new version to deploygate"
   lane :beta do
-    gradle(task: "clean assembleDebug")
+    gradle(task: "assemble", flavor: "production", build_type: "Debug")
     branch_name = git_branch
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
