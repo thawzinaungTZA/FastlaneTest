@@ -37,6 +37,10 @@ platform :android do
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
       message: "App for stage (#{git_commit_hash})",
     )
+    slack(
+       slack_url: ENV["SLACK_URL"],
+       message: "Upload apk to deploygate finished!"
+        )
   end
 
   desc "Deploy a new version to deploygate for production"
@@ -60,6 +64,10 @@ platform :android do
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
       message: "App for production (#{git_commit_hash})",
+    )
+    slack(
+      slack_url: ENV["SLACK_URL"],
+      message: "Upload apk to deploygate finished!"
     )
   end
 
