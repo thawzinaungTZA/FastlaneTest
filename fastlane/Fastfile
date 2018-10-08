@@ -41,7 +41,6 @@ platform :android do
     )
     slack(
        slack_url: ENV["SLACK_URL"],
-       success: false,
        message: "Build finished!"
     )
   end
@@ -71,7 +70,6 @@ platform :android do
     )
     slack(
       slack_url: ENV["SLACK_URL"],
-      success: false,
       message: "Build finished!"
     )
   end
@@ -94,7 +92,6 @@ platform :android do
       upload_to_play_store(track: 'beta')
       slack(
         slack_url: ENV["SLACK_URL"],
-        success: false,
         message: "Build finished!"
       )
     end
@@ -117,7 +114,6 @@ platform :android do
     upload_to_play_store
     slack(
       slack_url: ENV["SLACK_URL"],
-      success: false,
       message: "Build finished!"
     )
   end
