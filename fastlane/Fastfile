@@ -26,8 +26,10 @@ platform :android do
     gradle(task: "test")
   end
 
-  desc "Deploy a new version to deploygate for stage"
-  lane :alpha do
+  # Build the staging debug app and upload to DeployGate
+  desc "Deploy a new version to DeployGate for stage"
+  lane :stage do
+    gradle(task: "clean")
     gradle(task: "assemble", flavor: "staging", build_type: "Debug")
     branch_name = git_branch
     git_commit_hash = last_git_commit[:commit_hash]
@@ -41,11 +43,12 @@ platform :android do
        slack_url: ENV["SLACK_URL"],
        message: "Build finished!",
        fail_on_error: true
-        )
+    )
   end
 
-  desc "Deploy a new version to deploygate for production"
-  lane :beta do
+  # Build the production release app and upload to DeployGate
+  desc "Deploy a new version to DeployGate for production"
+  lane :alpha do
     gradle(task: "clean")
     gradle(
         task: "assemble",
@@ -73,9 +76,49 @@ platform :android do
     )
   end
 
+  # Build the app and upload to Play Store Beta Track
+  desc "Deploy a new version to Play Store beta version"
+    lane :beta do
+      gradle(task: "clean")
+      gradle(
+          task: "assemble",
+          flavor: "production",
+          build_type: "Release",
+          properties: {
+             "android.injected.signing.store.file" => ENV["KEY_STORE_PATH"],
+             "android.injected.signing.store.password" => ENV["KEY_STORE_PASSWORD"],
+             "android.injected.signing.key.alias" => ENV["KEY_STORE_KEY_ALIAS"],
+             "android.injected.signing.key.password" => ENV["KEY_STORE_KEY_PASSWORD"],
+           }
+      )
+      upload_to_play_store(track: 'beta')
+      slack(
+        slack_url: ENV["SLACK_URL"],
+        message: "Build finished!",
+        fail_on_error: true
+      )
+    end
+
+  # Build the app and upload to the Play Store
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
+    gradle(task: "clean")
+    gradle(
+        task: "assemble",
+        flavor: "production",
+        build_type: "Release",
+        properties: {
+             "android.injected.signing.store.file" => ENV["KEY_STORE_PATH"],
+             "android.injected.signing.store.password" => ENV["KEY_STORE_PASSWORD"],
+             "android.injected.signing.key.alias" => ENV["KEY_STORE_KEY_ALIAS"],
+             "android.injected.signing.key.password" => ENV["KEY_STORE_KEY_PASSWORD"],
+        }
+    )
     upload_to_play_store
+    slack(
+      slack_url: ENV["SLACK_URL"],
+      message: "Build finished!",
+      fail_on_error: true
+    )
   end
 end
