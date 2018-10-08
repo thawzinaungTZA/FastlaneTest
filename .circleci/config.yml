@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-      working_directory: ~/code
+      working_directory: ~/repo
       docker:
         - image: circleci/android:api-28-alpha
       environment:
@@ -21,7 +21,7 @@ jobs:
             - ~/.gradle
             key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
   deploy_test:
-        working_directory: ~/code
+        working_directory: ~/repo
         docker:
           - image: circleci/android:api-25-alpha
         environment:
@@ -40,7 +40,7 @@ jobs:
               name: fastlane
               command: bundle exec fastlane $FASTLANE_LANE
   deploy_prod:
-        working_directory: ~/code
+        working_directory: ~/repo
         docker:
           - image: circleci/android:api-25-alpha
         environment:
