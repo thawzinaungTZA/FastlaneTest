@@ -90,7 +90,7 @@ workflows:
           - pre_release_production:
               filters:
                   branches:
-                      only: release/*.*.*
+                      only: /release/*.*.*/
   release:
       jobs:
           - release_production:
