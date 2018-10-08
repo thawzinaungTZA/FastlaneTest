@@ -31,12 +31,11 @@ platform :android do
     gradle(task: "assemble", flavor: "staging", build_type: "Debug")
     branch_name = git_branch
     git_commit_hash = last_git_commit[:commit_hash]
-    build_number = increment_build_number
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      message: "App for stage (#{git_commit_hash}) [##{build_number}]",
+      message: "App for stage (#{git_commit_hash})",
     )
   end
 
@@ -56,12 +55,11 @@ platform :android do
     )
     branch_name = git_branch
     git_commit_hash = last_git_commit[:commit_hash]
-    build_number = increment_build_number
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      message: "App for production (#{git_commit_hash}) [##{build_number}]",
+      message: "App for production (#{git_commit_hash})",
     )
   end
 
