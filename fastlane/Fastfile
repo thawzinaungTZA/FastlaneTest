@@ -30,11 +30,12 @@ platform :android do
   lane :alpha do
     gradle(task: "assemble", flavor: "staging", build_type: "Debug")
     branch_name = git_branch
+    commit_name = git_commit
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      message: "App updated, from branch \"#{branch_name}\" (#{git_commit})",
+      message: "App for \"#{branch_name}\" (#{commit_name})",
     )
   end
 
@@ -53,11 +54,12 @@ platform :android do
          }
     )
     branch_name = git_branch
+    commit_name = git_commit
     deploygate(
       api_token: ENV["DEPLOYGATE_API_KEY"],
       user: ENV["DEPLOYGATE_USERNAME"],
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      message: "App for \"#{branch_name}\" (#{git_commit})",
+      message: "App for \"#{branch_name}\" (#{commit_name})",
     )
   end
 
