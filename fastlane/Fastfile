@@ -89,7 +89,10 @@ platform :android do
              "android.injected.signing.key.password" => ENV["KEY_STORE_KEY_PASSWORD"],
            }
       )
-      upload_to_play_store(track: 'beta')
+      upload_to_play_store(
+        track: 'beta',
+        apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+      )
 #      slack(
 #        slack_url: ENV["SLACK_URL"],
 #        message: "Build finished!"
@@ -111,7 +114,9 @@ platform :android do
              "android.injected.signing.key.password" => ENV["KEY_STORE_KEY_PASSWORD"],
         }
     )
-    upload_to_play_store
+    upload_to_play_store(
+       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+    )
 #    slack(
 #      slack_url: ENV["SLACK_URL"],
 #      message: "Build finished!"
