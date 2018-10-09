@@ -91,7 +91,13 @@ platform :android do
       )
       upload_to_play_store(
         track: 'beta',
-        apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+        apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+        aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+        skip_upload_apk: false,
+        skip_upload_aab: true,
+        skip_upload_metadata: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true
       )
 #      slack(
 #        slack_url: ENV["SLACK_URL"],
@@ -115,7 +121,13 @@ platform :android do
         }
     )
     upload_to_play_store(
-       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]
+       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+       aab: lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH],
+       skip_upload_apk: false,
+       skip_upload_aab: true,
+       skip_upload_metadata: true,
+       skip_upload_images: true,
+       skip_upload_screenshots: true
     )
 #    slack(
 #      slack_url: ENV["SLACK_URL"],
