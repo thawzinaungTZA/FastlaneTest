@@ -79,7 +79,7 @@ platform :android do
     lane :beta do
       gradle(task: "clean")
       gradle(
-          task: "assemble",
+          task: "bundle", # 'assemble' for apk and 'bundle' for aab
           flavor: "production",
           build_type: "Release",
           properties: {
@@ -110,7 +110,7 @@ platform :android do
   lane :deploy do
     gradle(task: "clean")
     gradle(
-        task: "assemble",
+        task: "bundle",
         flavor: "production",
         build_type: "Release",
         properties: {
